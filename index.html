@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>TelePrompter</title>
+    <title>TelePrompter (no remote)</title>
 
     <!-- Mobile Specific Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -24,39 +24,9 @@
     <meta name="robots" content="index,follow">
     <meta name="author" content="Peter Schmalfeldt">
 
-    <!-- Twitter META Info -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@mrmidi">
-    <meta property="twitter:title" content="TelePrompter">
-    <meta property="twitter:description" content="Browser-based TelePrompter with Remote Control">
-    <meta property="twitter:creator" content="@mrmidi">
-    <meta property="twitter:image:src" content="https://promptr.tv/assets/img/social-card.png">
-    <meta property="twitter:domain" content="promptr.tv">
-
-    <!-- Open Graph protocol -->
-    <meta property="og:locale" content="en_US">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="TelePrompter">
-    <meta property="og:url" content="https://promptr.tv">
-    <meta property="og:image" content="https://promptr.tv/assets/img/social-card.png">
-    <meta property="og:site_name" content="TelePrompter">
-    <meta property="og:description" content="Browser-based TelePrompter with Remote Control">
-
-    <!-- Dublin Core Metadata -->
-    <meta name="dc:language" content="en_US">
-    <meta name="dc:title" content="TelePrompter">
-    <meta name="dc:source" content="https://promptr.tv">
-    <meta name="dc:description" content="Browser-based TelePrompter with Remote Control">
-
-    <!-- Manifest -->
-    <link rel="manifest" href="manifest.json" />
-
     <!-- Icons -->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" sizes="192x192" href="assets/img/apple/icon-192x192.png" />
-
-    <!-- Canonical -->
-    <link rel="canonical" href="https://promptr.tv" />
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/img/icon-192x192.png" />
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap">
@@ -77,17 +47,6 @@
       <a class="button icon-remove-circle close-modal" href="javascript:void(0)" role="button" aria-label="Close Modal" title="Close Modal" data-ga data-category="Nav" data-action="Modal" data-label="Close Modal"></a>
 
       <div class="modal-content">
-        <!-- Remote Control -->
-        <div id="remote-control-modal">
-          <h1>Remote Control</h1>
-          <p>Access the Following URL from another device:</p>
-          <p class="remote-url">https://promptr.tv/remote</p>
-          <p>Enter this Remote ID:</p>
-          <p class="remote-id"></p>
-          <div id="qr-code"></div>
-          <p>Remote Control QR Code</p>
-        </div>
-
         <!-- Software Update -->
         <div id="software-update">
           <h1>Software Update</h1>
@@ -116,7 +75,6 @@
           </label>
         </div>
         <div class="buttons" role="group" aria-label="TelePrompter Controls">
-          <button class="button small icon-tablet remote" aria-label="Remote Control" title="Remote Control" data-ga data-category="Nav" data-action="Control" data-label="Remote"></button>
           <button class="button small icon-eye-close dim-controls" aria-label="Dim While Reading" title="Dim While Reading" data-ga data-category="Nav" data-action="Control" data-label="Dim"></button>
           <button class="button small icon-undo reset" aria-label="Reset TelePrompter" title="Reset TelePrompter" data-ga data-category="Nav" data-action="Control" data-label="Reset"></button>
           <button class="button small icon-text-width flip-x" aria-label="Flip Text Horizontally" title="Flip Text Horizontally" data-ga data-category="Nav" data-action="Control" data-label="FlipX"></button>
@@ -163,31 +121,6 @@
       </div>
       <i class="icon-play marker" style="display: none"></i>
     </article>
-
-    <script>
-      (function(d, s, id) {
-        var js, tjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = (window.location.hostname === 'promptr.tv')
-          ? 'https://promptr.tv/remote/socket.io/socket.io.js'
-          : 'http://' + window.location.hostname + ':3000/socket.io/socket.io.js';
-        tjs.parentNode.insertBefore(js, tjs);
-      }(document, 'script', 'teleprompter-socket'));
-    </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1R98WW400"></script>
-
-    <script>
-      window['ga-disable-G-S1R98WW400'] = (window.location.hostname !== 'promptr.tv');
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-S1R98WW400', {
-        'anonymize_ip': true,
-        'allow_google_signals': false
-      });
-    </script>
 
     <script src="assets/js/plugins.v120.js"></script>
     <script src="assets/js/script.v120.js"></script>
