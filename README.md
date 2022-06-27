@@ -1,9 +1,22 @@
-TelePrompter
+TelePrompter (without remote control)
 ===
 
-> Browser-based TelePrompter with Remote Control
+Forked from <https://github.com/manifestinteractive/teleprompter> and modified for easier localhosting and privacy. Huge thanks to @mrmidi for creating the original project!
+
+- Removed remote control and all code using Google Analytics (which from my understanding was set up to track almost all interaction with the UI).
+- Added support cleaning up pasted rich text from Apple's TextEdit.
+- Overlay window and marker adapt size/position based on selected font size.
+- Removed QR code plugin (as it is no longer needed).
+- Removed promtr.tv related metadata from index.html
+
+You can use this version locally by e.g. using the *Live Server* extension for Visual Studio Code, or run a simple webserver in your terminal.
+
+For my personal workflow, I write markdown in Visual Studio Code, then copy text from the markdown preview and paste it into TelePrompter.
+
+> Browser-based TelePrompter *without* Remote Control
 
 ![Screenshot](assets/img/social-card.png "Screenshot")
+(screenshot shows remote control)
 
 Features
 ---
@@ -12,14 +25,9 @@ Features
 - [X] Changes Saved Automatically
 - [X] Handy Keyboard Shortcuts
 - [X] Advanced Controls
-- [X] Remote Control Support
+- ~~[X] Remote Control Support~~
+- [x] No tracking via Google Analytics
 
-Free to Use
----
-
-Our Open Source TelePrompter is Available Online:
-
-[![Launch](https://img.shields.io/badge/Launch_TelePrompter-blue.svg?logo=azure-data-explorer&style=for-the-badge&logoColor=white)](https://promptr.tv)
 
 Keyboard Shortcuts
 ---
