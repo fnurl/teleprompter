@@ -15,8 +15,7 @@ var TelePrompter = (function() {
   var $elm = {};
 
   /* App Settings */
-  var emitTimeout,
-    debug = false,
+  var debug = false,
     initialized = false,
     isPlaying = false,
     scrollDelay,
@@ -25,6 +24,8 @@ var TelePrompter = (function() {
     timer,
     timerExp = 10,
     timerURL,
+    confirmTimeout,
+    confirmTime = 2000,
     version = 'v1.2.0';
 
   // for cleaning up paste
@@ -59,6 +60,8 @@ var TelePrompter = (function() {
     $elm.article = $('article');
     $elm.backgroundColor = $('#background-color');
     $elm.body = $('body');
+    $elm.buttonCleanup = $('.button.cleanup');
+    $elm.buttonClearText = $('.button.clear-text');
     $elm.buttonDimControls = $('.button.dim-controls');
     $elm.buttonFlipX = $('.button.flip-x');
     $elm.buttonFlipY = $('.button.flip-y');
@@ -80,6 +83,8 @@ var TelePrompter = (function() {
 
     // Bind Events
     $elm.backgroundColor.on('change.teleprompter', handleBackgroundColor);
+    $elm.buttonCleanup.on('click.teleprompter', handleCleanup);
+    $elm.buttonClearText.on('click.teleprompter', handleClearText);
     $elm.buttonDimControls.on('click.teleprompter', handleDim);
     $elm.buttonFlipX.on('click.teleprompter', handleFlipX);
     $elm.buttonFlipY.on('click.teleprompter', handleFlipY);
@@ -385,6 +390,83 @@ var TelePrompter = (function() {
     $('p:empty', $elm.teleprompter).remove();
   }
 
+  /**
+   * Manually triggered cleanup.
+   */
+  function handleCleanup() {
+    cleanTeleprompter();
+    cleanUpText();
+  }
+
+  /**
+   * Handle Paste into teleprompter
+   */
+   function handlePaste(event) {
+    pasteDetected = true;
+  }
+
+  function handleInputAfterPaste() {
+    // clean pasted text
+    if (pasteDetected) {
+      cleanUpText();
+      pasteDetected = false;
+      updateTeleprompter();
+    }
+  }
+
+  /**
+   * Clean up pasted rich text
+   */
+  function cleanUpText() {
+    let allTeleprompterElements = $('*', $elm.teleprompter);
+    if (debug) {
+      console.log('[TP]', `Cleaning up text (${allTeleprompterElements.length} elements).`);
+    }
+
+    // remove style from p tags
+    $('p', $elm.teleprompter).removeAttr('style');
+
+    // remove id, class from all elements
+    allTeleprompterElements.removeAttr('id').removeAttr('class');
+
+    // remove font-face, font-size, font-kerning from all elements
+    allTeleprompterElements.each(function (i, el) {
+      $(el).css('font-kerning', '');
+      $(el).css('font-face', '');
+      $(el).css('font-size', '');
+
+      // remove empty remaining style attributes
+      if (el.getAttribute('style') == '') {
+        el.removeAttribute('style');
+      }
+    });
+  }
+
+  /**
+   * Clear all text. Validation click needed within 2 seconds.
+   */
+  function handleClearText(evt) {
+    // proceed if this was a confirmation click
+    if ($elm.buttonClearText.hasClass('confirm')) {
+      $elm.teleprompter.empty();
+      $elm.teleprompter.html('<br><br>');
+      $elm.buttonClearText.removeClass('confirm');
+      clearTimeout(confirmTimeout);
+    }
+    // request confirmation click
+    else {
+      $elm.buttonClearText.addClass('confirm');
+      setTimeout(function () {
+        $elm.buttonClearText.removeClass('confirm');
+      }, confirmTime);
+      evt.preventDefault();
+      evt.stopPropagation();
+      return false;
+    }
+    if (debug) {
+      console.log('[TP]', 'All text cleared.');
+    }
+  }
 
   /**
    * Get App Config
@@ -619,75 +701,6 @@ var TelePrompter = (function() {
     }
   }
 
-  function getCaretPosition(editableDiv) {
-    var caretPos = 0,
-      sel, range;
-    if (window.getSelection) {
-      sel = window.getSelection();
-      if (sel.rangeCount) {
-        range = sel.getRangeAt(0);
-        if (range.commonAncestorContainer.parentNode == editableDiv) {
-          caretPos = range.endOffset;
-        }
-      }
-    } else if (document.selection && document.selection.createRange) {
-      range = document.selection.createRange();
-      if (range.parentElement() == editableDiv) {
-        var tempEl = document.createElement("span");
-        editableDiv.insertBefore(tempEl, editableDiv.firstChild);
-        var tempRange = range.duplicate();
-        tempRange.moveToElementText(tempEl);
-        tempRange.setEndPoint("EndToEnd", range);
-        caretPos = tempRange.text.length;
-      }
-    }
-    return caretPos;
-  }
-
-  /**
-   * Handle Paste into teleprompter
-   */
-  function handlePaste(event) {
-    pasteDetected = true;
-    /*
-    let clipboadData = (event.clipboardData || window.clipboardData || event.originalEvent.clipboardData);
-    let richText = clipboadData.getData('text/html');
-    console.log('paste:', richText);
-    let pasteNode = document.createElement('div');
-    pasteNode.innerHTML = richText;
-    if (!selection.rangeCount) return false;
-    selection.deleteFromDocument();
-    selection.getRangeAt(0).insertNode(pasteNode);
-    console.log("pastenode:", pasteNode);
-    event.preventDefault();
-    */
-  }
-
-  function handleInputAfterPaste() {
-    // clean pasted text
-    if (pasteDetected) {
-      cleanUpPaste();
-      pasteDetected = false;
-    }
-  }
-
-  /**
-   * Clean up pasted rich text
-   */
-  function cleanUpPaste() {
-    if (debug) {
-      console.log('[TP]', 'Cleaning up pasted text...');
-    }
-    $('p', $elm.teleprompter).removeAttr('class').removeAttr('style');
-    $('p span', $elm.teleprompter).removeAttr('class');
-    $('p span', $elm.teleprompter).each(function (i, el) {
-      $(el).css('font-kerning', '');
-      // remove empty style attributes
-      if (el.getAttribute('style') == '') {
-        el.removeAttribute('style');
-      }
-    });
-  }
 
   /**
    * Listen for Keyboard Navigation
@@ -974,7 +987,7 @@ var TelePrompter = (function() {
    * @returns Boolean
    */
   function updateTeleprompter(evt) {
-    if (evt.keyCode == 27) {
+    if (evt && evt.keyCode == 27) {
       $elm.teleprompter.blur();
       evt.preventDefault();
       evt.stopPropagation();

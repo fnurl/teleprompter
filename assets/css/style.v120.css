@@ -196,6 +196,10 @@ article .teleprompter.flip-xy {
   color: #4297d7;
 }
 
+.button.clear-text.confirm {
+  color: red;
+}
+
 .marker {
   position: fixed;
   left: 0;
